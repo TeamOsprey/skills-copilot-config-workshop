@@ -1,7 +1,7 @@
 # Task Manager CLI Project Plan
 
 ## Project overview
-Create a small Task Manager CLI application using only built-in Node.js modules and in-memory storage. The app will let users create, list, update, delete, filter, and sort tasks while persisting state only for the lifetime of the process.
+Create a small Task Manager CLI application using in-memory storage and only built-in Node.js modules with no external dependencies. The app will let users create, list, update, delete, filter, and sort tasks while persisting state only for the lifetime of the process.
 
 ## User stories
 1. As a user, I want to create a new task so I can track work items.

@@ -45,35 +45,6 @@ function isValidId(value) {
   return value.trim().length > 0 && uuidRegex.test(value);
 }
 
-/**
- * Validate task payload for creation or update.
- * Throws ValidationError on failure.
- */
-function validateTaskPayload(payload, { creating = true } = {}) {
-  if (creating) {
-    if (!payload) throw new ValidationError('Payload is required');
-    if (!isNonEmptyString(payload.title)) throw new ValidationError('title is required and must be non-empty (1..100 chars)');
-    if (!isLengthBetween(payload.title, 1, 100)) throw new ValidationError('title length must be 1..100 characters');
-    if (payload.description === undefined || payload.description === null) throw new ValidationError('description must be defined (may be empty string)');
-    if (!isString(payload.description)) throw new ValidationError('description must be a string');
-    if (payload.description.length > 500) throw new ValidationError('description max length is 500 characters');
-    if (payload.status !== undefined && !isValidStatus(payload.status)) throw new ValidationError(`status must be one of: ${Array.from(STATUSES).join(', ')}`);
-    if (payload.priority !== undefined && !isValidPriority(payload.priority)) throw new ValidationError(`priority must be one of: ${Array.from(PRIORITIES).join(', ')}`);
-  } else {
-    // updating: only validate fields that are present
-    if (payload.title !== undefined) {
-      if (!isNonEmptyString(payload.title)) throw new ValidationError('title must be non-empty when provided');
-      if (!isLengthBetween(payload.title, 1, 100)) throw new ValidationError('title length must be 1..100 characters');
-    }
-    if (payload.description !== undefined) {
-      if (!isString(payload.description)) throw new ValidationError('description must be a string');
-      if (payload.description.length > 500) throw new ValidationError('description max length is 500 characters');
-    }
-    if (payload.status !== undefined && !isValidStatus(payload.status)) throw new ValidationError(`status must be one of: ${Array.from(STATUSES).join(', ')}`);
-    if (payload.priority !== undefined && !isValidPriority(payload.priority)) throw new ValidationError(`priority must be one of: ${Array.from(PRIORITIES).join(', ')}`);
-  }
-}
-
 export {
   ValidationError,
   isString,
@@ -83,5 +54,4 @@ export {
   isValidPriority,
   isISODateString,
   isValidId,
-  validateTaskPayload,
 };

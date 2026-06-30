@@ -20,6 +20,9 @@ async function runDemo() {
     console.log(t2);
     console.log(t3);
 
+    console.log('\nClone a task (t1):');
+    console.log(t1.clone());
+
     console.log('\nAll tasks:');
     console.log(listTasks());
 

@@ -17,7 +17,7 @@ function validateTaskPayload(payload, { creating = true, requireId = false, requ
     }
   }
 
-  if (requireId || payload?.id !== undefined || creating) {
+  if (requireId || payload?.id !== undefined) {
     if (!isValidId(payload.id)) {
       throw new ValidationError('id must be a valid identifier');
     }
@@ -140,6 +140,17 @@ class Task {
     // ensure updatedAt is not earlier than createdAt
     if (!isISODateString(this.createdAt)) throw new ValidationError('createdAt is malformed');
     this.updatedAt = now;
+  }
+
+  /**
+   * Create a copy of the task with a newly generated identifier.
+   * @returns {Task}
+   */
+  clone() {
+    return new Task({
+      ...this.toJSON(),
+      id: randomUUID(),
+    });
   }
 
   /**

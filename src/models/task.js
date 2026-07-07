@@ -106,17 +106,22 @@ class Task {
    * @param {Object} input
    */
   static createFromInput(input = {}) {
-    validateTaskPayload(input, { creating: true });
+    const normalizedInput = {
+      ...input,
+      description: input.description === undefined ? '' : input.description,
+    };
+
+    validateTaskPayload(normalizedInput, { creating: true });
 
     const now = new Date().toISOString();
-    const id = input.id && isValidId(input.id) ? input.id : randomUUID();
-    const status = input.status || 'todo';
-    const priority = input.priority || 'medium';
+    const id = normalizedInput.id && isValidId(normalizedInput.id) ? normalizedInput.id : randomUUID();
+    const status = normalizedInput.status || 'todo';
+    const priority = normalizedInput.priority || 'medium';
 
     return new Task({
       id,
-      title: input.title.trim(),
-      description: String(input.description || ''),
+      title: normalizedInput.title.trim(),
+      description: String(normalizedInput.description),
       status,
       priority,
       createdAt: now,
@@ -136,7 +141,10 @@ class Task {
     if (updates.status !== undefined) this.status = updates.status;
     if (updates.priority !== undefined) this.priority = updates.priority;
 
-    const now = new Date().toISOString();
+    const createdAtTime = new Date(this.createdAt).getTime();
+    const updatedAtTime = Date.now();
+    const now = new Date(Math.max(updatedAtTime, createdAtTime + 1)).toISOString();
+
     // ensure updatedAt is not earlier than createdAt
     if (!isISODateString(this.createdAt)) throw new ValidationError('createdAt is malformed');
     this.updatedAt = now;

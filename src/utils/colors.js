@@ -1,7 +1,5 @@
 import chalk from 'chalk';
-
-const ALLOWED_STATUSES = new Set(['todo', 'in-progress', 'done']);
-const ALLOWED_PRIORITIES = new Set(['low', 'medium', 'high']);
+import { isValidStatus, isValidPriority } from './validators.js';
 
 /**
  * Color a task status for terminal output.
@@ -18,7 +16,7 @@ function colorStatus(status) {
   if (typeof status !== 'string') {
     throw new TypeError('status must be a string');
   }
-  if (!ALLOWED_STATUSES.has(status)) {
+  if (!isValidStatus(status)) {
     throw new TypeError('status must be one of: todo, in-progress, done');
   }
 
@@ -42,7 +40,7 @@ function colorPriority(priority) {
   if (typeof priority !== 'string') {
     throw new TypeError('priority must be a string');
   }
-  if (!ALLOWED_PRIORITIES.has(priority)) {
+  if (!isValidPriority(priority)) {
     throw new TypeError('priority must be one of: low, medium, high');
   }
 

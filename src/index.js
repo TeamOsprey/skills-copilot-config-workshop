@@ -55,7 +55,7 @@ async function runDemo() {
     console.log('Deleted', t2.id);
 
     console.log('\nFinal tasks sorted by createdAt desc:');
-  console.log(toDisplayTasks(listTasks({ sortBy: 'createdAt:desc' })));
+    console.log(toDisplayTasks(listTasks({ sortBy: 'createdAt:desc' })));
 
     // demonstrate error handling
     try {

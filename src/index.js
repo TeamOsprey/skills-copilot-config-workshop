@@ -6,20 +6,7 @@ import {
   findTaskById,
   NotFoundError,
 } from './services/taskService.js';
-import { colorStatus, colorPriority } from './utils/colors.js';
-
-function toDisplayTask(task) {
-  const plainTask = typeof task?.toJSON === 'function' ? task.toJSON() : task;
-  return {
-    ...plainTask,
-    status: colorStatus(plainTask.status),
-    priority: colorPriority(plainTask.priority),
-  };
-}
-
-function toDisplayTasks(tasks) {
-  return tasks.map((task) => toDisplayTask(task));
-}
+import { formatTask, formatTasks } from './utils/colors.js';
 
 async function runDemo() {
   console.log('Task Manager demo starting...');
@@ -30,32 +17,32 @@ async function runDemo() {
     const t3 = createTask({ title: 'Write report', description: 'Quarterly results', status: 'in-progress' });
 
     console.log('\nCreated tasks:');
-    console.log(toDisplayTask(t1));
-    console.log(toDisplayTask(t2));
-    console.log(toDisplayTask(t3));
+    console.log(formatTask(t1));
+    console.log(formatTask(t2));
+    console.log(formatTask(t3));
 
     console.log('\nClone a task (t1):');
-    console.log(toDisplayTask(t1.clone()));
+    console.log(formatTask(t1.clone()));
 
     console.log('\nAll tasks:');
-    console.log(toDisplayTasks(listTasks()));
+    console.log(formatTasks(listTasks()));
 
     console.log('\nFilter tasks (priority=high):');
-    console.log(toDisplayTasks(listTasks({ filter: { priority: 'high' } })));
+    console.log(formatTasks(listTasks({ filter: { priority: 'high' } })));
 
     console.log('\nUpdate task status:');
     const updated = updateTask(t1.id, { status: 'done' });
-    console.log(toDisplayTask(updated));
+    console.log(formatTask(updated));
 
     console.log('\nFind by id:');
-    console.log(toDisplayTask(findTaskById(t1.id)));
+    console.log(formatTask(findTaskById(t1.id)));
 
     console.log('\nDelete a task (t2):');
     deleteTask(t2.id);
     console.log('Deleted', t2.id);
 
     console.log('\nFinal tasks sorted by createdAt desc:');
-    console.log(toDisplayTasks(listTasks({ sortBy: 'createdAt:desc' })));
+    console.log(formatTasks(listTasks({ sortBy: 'createdAt:desc' })));
 
     // demonstrate error handling
     try {

@@ -49,4 +49,50 @@ function colorPriority(priority) {
   return chalk.dim(priority);
 }
 
-export { colorStatus, colorPriority };
+/**
+ * Format a task as a human-readable multi-line string with colorized status and priority.
+ *
+ * @param {object} task - A Task instance or plain task object.
+ * @returns {string} Multi-line formatted string ready for terminal output.
+ * @throws {TypeError} If `task` is not an object.
+ * @example
+ * formatTask(createTask({ title: 'Buy milk', priority: 'low' }));
+ * @example
+ * formatTask({ id: '1', title: 'Read', status: 'done', priority: 'high', description: '', createdAt: '...', updatedAt: '...' });
+ */
+function formatTask(task) {
+  if (!task || typeof task !== 'object') {
+    throw new TypeError('task must be an object');
+  }
+  const plain = typeof task.toJSON === 'function' ? task.toJSON() : task;
+  const lines = [
+    `[${plain.id}] ${plain.title}`,
+    `  Status:      ${colorStatus(plain.status)}`,
+    `  Priority:    ${colorPriority(plain.priority)}`,
+    `  Description: ${plain.description || '(none)'}`,
+    `  Created:     ${plain.createdAt}`,
+    `  Updated:     ${plain.updatedAt}`,
+  ];
+  return lines.join('\n');
+}
+
+/**
+ * Format an array of tasks as a human-readable string with each task separated by a blank line.
+ *
+ * @param {object[]} tasks - Array of Task instances or plain task objects.
+ * @returns {string} Formatted string ready for terminal output.
+ * @throws {TypeError} If `tasks` is not an array.
+ * @example
+ * formatTasks(listTasks());
+ * @example
+ * formatTasks([]);
+ */
+function formatTasks(tasks) {
+  if (!Array.isArray(tasks)) {
+    throw new TypeError('tasks must be an array');
+  }
+  if (tasks.length === 0) return '(no tasks)';
+  return tasks.map(formatTask).join('\n\n');
+}
+
+export { colorStatus, colorPriority, formatTask, formatTasks };

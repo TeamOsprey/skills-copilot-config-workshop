@@ -5,7 +5,9 @@ import {
   createTask,
   deleteTask,
   findTaskById,
+  filterByCategory,
   filterTasks,
+  listCategories,
   listTasks,
   NotFoundError,
   sortTasks,
@@ -116,5 +118,43 @@ describe('task service', () => {
     clearStore();
 
     assert.equal(listTasks().length, 0);
+  });
+
+  test('createTask defaults category to general', () => {
+    const task = createTask({ title: 'Default cat', description: '' });
+    assert.equal(task.category, 'general');
+  });
+
+  test('createTask stores an explicit category', () => {
+    const task = createTask({ title: 'Work item', description: '', category: 'work' });
+    assert.equal(task.category, 'work');
+  });
+
+  test('filterByCategory returns only matching tasks', () => {
+    createTask({ title: 'Task A', description: '', category: 'work' });
+    createTask({ title: 'Task B', description: '', category: 'home' });
+    createTask({ title: 'Task C', description: '', category: 'work' });
+
+    const work = filterByCategory('work');
+    assert.equal(work.length, 2);
+    assert.ok(work.every((t) => t.category === 'work'));
+
+    const home = filterByCategory('home');
+    assert.equal(home.length, 1);
+  });
+
+  test('filterByCategory returns empty array when no tasks match', () => {
+    createTask({ title: 'Task A', description: '', category: 'work' });
+    assert.deepEqual(filterByCategory('none'), []);
+  });
+
+  test('listCategories returns sorted unique categories', () => {
+    createTask({ title: 'T1', description: '', category: 'work' });
+    createTask({ title: 'T2', description: '', category: 'home' });
+    createTask({ title: 'T3', description: '', category: 'work' });
+    createTask({ title: 'T4', description: '' });
+
+    const cats = listCategories();
+    assert.deepEqual(cats, ['general', 'home', 'work']);
   });
 });

@@ -48,6 +48,15 @@ function validateTaskPayload(payload, { creating = true, requireId = false, requ
     throw new ValidationError('status must be one of: todo, in-progress, done');
   }
 
+  if (payload.category !== undefined) {
+    if (typeof payload.category !== 'string' || payload.category.trim().length === 0) {
+      throw new ValidationError('category must be a non-empty string');
+    }
+    if (payload.category.length > 50) {
+      throw new ValidationError('category max length is 50 characters');
+    }
+  }
+
   if (payload.priority !== undefined && !isValidPriority(payload.priority)) {
     throw new ValidationError('priority must be one of: low, medium, high');
   }
@@ -86,9 +95,9 @@ class Task {
    * @param {string} options.createdAt
    * @param {string} options.updatedAt
    */
-  constructor({ id, title, description, status, priority, createdAt, updatedAt }) {
+  constructor({ id, title, description, status, priority, category = 'general', createdAt, updatedAt }) {
     validateTaskPayload(
-      { id, title, description, status, priority, createdAt, updatedAt },
+      { id, title, description, status, priority, category, createdAt, updatedAt },
       { creating: false, requireId: true, requireDates: true },
     );
 
@@ -97,6 +106,7 @@ class Task {
     this.description = description;
     this.status = status;
     this.priority = priority;
+    this.category = category;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
   }
@@ -117,6 +127,7 @@ class Task {
     const id = normalizedInput.id && isValidId(normalizedInput.id) ? normalizedInput.id : randomUUID();
     const status = normalizedInput.status || 'todo';
     const priority = normalizedInput.priority || 'medium';
+    const category = normalizedInput.category || 'general';
 
     return new Task({
       id,
@@ -124,6 +135,7 @@ class Task {
       description: String(normalizedInput.description),
       status,
       priority,
+      category,
       createdAt: now,
       updatedAt: now,
     });
@@ -140,6 +152,7 @@ class Task {
     if (updates.description !== undefined) this.description = String(updates.description);
     if (updates.status !== undefined) this.status = updates.status;
     if (updates.priority !== undefined) this.priority = updates.priority;
+    if (updates.category !== undefined) this.category = updates.category;
 
     const createdAtTime = new Date(this.createdAt).getTime();
     const updatedAtTime = Date.now();
@@ -172,6 +185,7 @@ class Task {
       description: this.description,
       status: this.status,
       priority: this.priority,
+      category: this.category,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     };

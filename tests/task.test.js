@@ -145,8 +145,29 @@ describe('Task model', () => {
       description: 'Value',
       status: 'todo',
       priority: 'medium',
+      category: 'general',
       createdAt: task.createdAt,
       updatedAt: task.updatedAt,
     });
+  });
+
+  test('createFromInput defaults category to general', () => {
+    const task = Task.createFromInput({ title: 'Cat test' });
+    assert.equal(task.category, 'general');
+  });
+
+  test('createFromInput accepts an explicit category', () => {
+    const task = Task.createFromInput({ title: 'Cat test', category: 'work' });
+    assert.equal(task.category, 'work');
+  });
+
+  test('createFromInput rejects an empty category string', () => {
+    assert.throws(() => Task.createFromInput({ title: 'Cat test', category: '   ' }), ValidationError);
+  });
+
+  test('update can change category', () => {
+    const task = Task.createFromInput({ title: 'Cat update', category: 'home' });
+    task.update({ category: 'work' });
+    assert.equal(task.category, 'work');
   });
 });

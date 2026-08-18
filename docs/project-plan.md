@@ -40,6 +40,13 @@ Create a small Task Manager CLI application using in-memory storage and only bui
      - Output order reflects the selected sort option.
      - Ties preserve a consistent secondary order.
 
+7. As a user, I want to assign a category to a task so I can group related work items.
+   - Acceptance criteria:
+     - A task may have an optional category string (defaults to "general").
+     - The category can be set when creating a task.
+     - I can filter tasks to show only those in a given category.
+     - I can retrieve a list of all unique categories currently in use.
+
 ## Data model
 - Task
   - id: string
@@ -47,6 +54,7 @@ Create a small Task Manager CLI application using in-memory storage and only bui
   - description: string
   - status: "todo" | "in-progress" | "done"
   - priority: "low" | "medium" | "high"
+  - category: string (optional, default: "general")
   - createdAt: string
   - updatedAt: string
 

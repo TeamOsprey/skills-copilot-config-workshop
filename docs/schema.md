@@ -27,6 +27,10 @@ Task
   - allowed values: "low", "medium", "high"
   - validation: must exactly match one of the allowed values
   - default: "medium" when creating a new task
+- category: string
+  - optional
+  - default: "general" when creating a new task
+  - validation: must be a non-empty string when provided; max length 50 characters
 - createdAt: string
   - required
   - ISO 8601 timestamp generated at creation
@@ -66,8 +70,8 @@ taskStore.js
 - dependencies: none (pure in-memory storage)
 
 taskService.js
-- exports: task operations: `createTask(input)`, `listTasks(options)`, `updateTask(id, updates)`, `deleteTask(id)`, `filterTasks(tasks, filters)`, `sortTasks(tasks, sortBy)`
-- responsibility: implement business rules, validation, timestamp updates, filtering, and sorting
+- exports: task operations: `createTask(input)`, `listTasks(options)`, `updateTask(id, updates)`, `deleteTask(id)`, `filterTasks(tasks, filters)`, `sortTasks(tasks, sortBy)`, `filterByCategory(category)`, `listCategories()`
+- responsibility: implement business rules, validation, timestamp updates, filtering, sorting, and category lookups
 - dependencies: `./taskStore.js`
 
 taskFormatter.js

@@ -80,6 +80,23 @@ function sortTasks(taskArray, sortBy) {
   return sorted;
 }
 
+/**
+ * Filter tasks by category.
+ * @param {string} category
+ * @returns {Task[]}
+ */
+function filterByCategory(category) {
+  return Array.from(tasks.values()).filter((t) => t.category === category);
+}
+
+/**
+ * Return a sorted array of all unique category strings in use.
+ * @returns {string[]}
+ */
+function listCategories() {
+  return [...new Set(Array.from(tasks.values()).map((t) => t.category))].sort();
+}
+
 function clearStore() {
   tasks.clear();
 }
@@ -91,6 +108,8 @@ export {
   deleteTask,
   findTaskById,
   filterTasks,
+  filterByCategory,
+  listCategories,
   sortTasks,
   clearStore,
   NotFoundError,
